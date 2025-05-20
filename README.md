@@ -19,7 +19,33 @@ Write the C Program using Linux Process API - Shared Memory
 Execute the C Program for the desired output. 
 
 # PROGRAM:
+~~~
+#include <stdio.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
 
+int main()
+{
+	// Generate a unique key using ftok
+	key_t key = ftok("shmfile", 65);
+
+	// Get an identifier for the shared memory segment using shmget
+	int shmid = shmget(key, 1024, 0666 | IPC_CREAT);
+      printf("Shared memory id = %d \n",shmid);
+// Attach to the shared memory segment using shmat
+	char* str = (char*)shmat(shmid, (void*)0, 0);
+	
+    printf("Write Data : ");
+	fgets(str, 1024, stdin);
+
+	printf("Data written in memory: %s\n", str);
+
+	// Detach from the shared memory segment using shmdt
+	shmdt(str);
+
+	return 0;
+}
+~~~
 ## Write a C program that illustrates two processes communicating using shared memory.
 
 
@@ -27,6 +53,7 @@ Execute the C Program for the desired output.
 
 
 ## OUTPUT
+![371405490-d4bc6ce8-7de7-41ca-8465-c874e52e129d](https://github.com/user-attachments/assets/3e57e275-94c8-47b0-b02c-0e51c6e4d9b7)
 
 
 # RESULT:
